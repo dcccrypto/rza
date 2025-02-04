@@ -3,6 +3,7 @@ FROM php:8.2-apache
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    apache2 \
     && docker-php-ext-install pdo pdo_pgsql
 
 # Enable Apache modules
@@ -24,5 +25,5 @@ COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 # Expose port
 EXPOSE 80
 
-# Start Apache
-CMD ["apache2-ctl", "-D", "FOREGROUND"] 
+# Start Apache (using apache2 instead of apache2-ctl)
+CMD ["apache2", "-D", "FOREGROUND"] 
