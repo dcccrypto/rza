@@ -1,6 +1,23 @@
 <?php
 require_once '../includes/db.php';
 require_once '../includes/header.php';
+require_once '../includes/session_manager.php';
+
+// Add educational content categories
+$categories = [
+    'wildlife' => 'Wildlife Education',
+    'conservation' => 'Conservation',
+    'environment' => 'Environmental Studies',
+    'activities' => 'Educational Activities'
+];
+
+// Add downloadable resources
+$resources = [
+    'worksheets' => 'Educational Worksheets',
+    'guides' => 'Teacher Guides',
+    'activities' => 'Interactive Activities',
+    'quizzes' => 'Educational Quizzes'
+];
 
 // Define educational resources
 $resources = [

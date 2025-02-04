@@ -52,13 +52,19 @@ function validateBookingForm(form) {
 
 // Show loading state
 function showLoading(form) {
-    form.classList.add('loading');
     const submitBtn = form.querySelector('button[type="submit"]');
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.dataset.originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
-    }
+    const originalText = submitBtn.innerHTML;
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Processing...
+    `;
+    
+    return () => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    };
 }
 
 // Remove loading state
@@ -166,29 +172,109 @@ document.addEventListener('DOMContentLoaded', function() {
 // Theme Toggle Functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
-    }
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
 
     // Theme toggle button click handler
     const themeToggle = document.getElementById('toggleContrast');
     if (themeToggle) {
         themeToggle.addEventListener('click', function() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            if (newTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
+            applyTheme(newTheme);
         });
     }
-}); 
+});
+
+// Reading Mode Toggle
+function toggleReadingMode() {
+    document.body.classList.toggle('reading-mode');
+    const isReadingMode = document.body.classList.contains('reading-mode');
+    
+    // Store preference
+    localStorage.setItem('readingMode', isReadingMode ? 'enabled' : 'disabled');
+    
+    // Update ARIA state
+    document.body.setAttribute('aria-reading-mode', isReadingMode.toString());
+    
+    // Track accessibility usage
+    trackKPI('accessibility_feature', {
+        feature: 'reading_mode',
+        state: isReadingMode ? 'enabled' : 'disabled'
+    });
+
+    // Announce change to screen readers
+    announceToScreenReader(`Reading mode ${isReadingMode ? 'enabled' : 'disabled'}`);
+}
+
+// High Contrast Toggle
+function toggleHighContrast() {
+    document.body.classList.toggle('high-contrast');
+    const isHighContrast = document.body.classList.contains('high-contrast');
+    
+    // Store preference
+    localStorage.setItem('highContrast', isHighContrast ? 'enabled' : 'disabled');
+    
+    // Update ARIA state
+    document.body.setAttribute('aria-high-contrast', isHighContrast.toString());
+    
+    // Track accessibility usage
+    trackKPI('accessibility_feature', {
+        feature: 'high_contrast',
+        state: isHighContrast ? 'enabled' : 'disabled'
+    });
+
+    // Announce change to screen readers
+    announceToScreenReader(`High contrast mode ${isHighContrast ? 'enabled' : 'disabled'}`);
+}
+
+// Screen reader announcements
+function announceToScreenReader(message) {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('class', 'sr-only');
+    announcement.textContent = message;
+    document.body.appendChild(announcement);
+    setTimeout(() => announcement.remove(), 1000);
+}
+
+// Initialize accessibility preferences on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Restore reading mode preference
+    if (localStorage.getItem('readingMode') === 'enabled') {
+        document.body.classList.add('reading-mode');
+    }
+    
+    // Restore high contrast preference
+    if (localStorage.getItem('highContrast') === 'enabled') {
+        document.body.classList.add('high-contrast');
+    }
+});
+
+// Enhanced theme toggle with accessibility tracking
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    localStorage.setItem('theme', theme);
+    
+    // Update ARIA attributes
+    document.documentElement.setAttribute('aria-theme', theme);
+    
+    // Track theme change
+    trackKPI('accessibility_feature', {
+        feature: 'theme',
+        value: theme
+    });
+    
+    // Force refresh problematic elements
+    refreshUIElements();
+}
+
+// Helper function to refresh UI elements
+function refreshUIElements() {
+    const elements = document.querySelectorAll('.card, .booking-information, .total-amount');
+    elements.forEach(el => {
+        el.style.display = 'none';
+        el.offsetHeight; // Trigger reflow
+        el.style.display = '';
+    });
+} 

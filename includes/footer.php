@@ -16,13 +16,16 @@
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <h5>Accessibility</h5>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-outline-light" onclick="toggleFontSize()">
-                            <i class="bi bi-fonts"></i> Toggle Font Size
+                    <h5>Accessibility Options</h5>
+                    <div class="d-flex flex-column gap-2">
+                        <button class="btn btn-outline-light" onclick="toggleFontSize()" aria-label="Toggle Font Size">
+                            <i class="bi bi-fonts"></i> Text Size
                         </button>
-                        <button id="toggleContrast" class="btn btn-outline-light">
-                            <i class="bi bi-circle-half"></i> Toggle Theme
+                        <button class="btn btn-outline-light" onclick="toggleHighContrast()" aria-label="Toggle High Contrast">
+                            <i class="bi bi-circle-half"></i> High Contrast
+                        </button>
+                        <button class="btn btn-outline-light" onclick="toggleReadingMode()" aria-label="Toggle Reading Mode">
+                            <i class="bi bi-book"></i> Reading Mode
                         </button>
                     </div>
                 </div>
@@ -44,7 +47,7 @@
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
             html.setAttribute('data-bs-theme', newTheme);
-            localStorage.setItem('darkMode', newTheme === 'dark' ? 'enabled' : 'disabled');
+            localStorage.setItem('theme', newTheme);
         }
 
         // Font size toggle
@@ -71,6 +74,12 @@
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
         });
     </script>
 </body>

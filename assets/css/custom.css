@@ -1,11 +1,9 @@
-/* Custom Variables */
+/* Dark Theme Variables */
 :root {
+    /* Light theme variables */
     --rza-primary: #2c5530;
     --rza-secondary: #4a8b3f;
     --rza-accent: #ffd700;
-    --rza-text: #333333;
-    --rza-bg-light: #f8f9fa;
-    --rza-shadow: rgba(0, 0, 0, 0.1);
     --text-color: #212529;
     --bg-color: #ffffff;
     --card-bg: #ffffff;
@@ -13,16 +11,37 @@
     --link-color: #198754;
     --link-hover: #146c43;
     --muted-text: #6c757d;
+    --navbar-bg: var(--rza-primary);
+    --footer-bg: #161819;
+    --input-bg: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
     --success-color: #198754;
     --warning-color: #ffc107;
     --info-color: #0dcaf0;
 }
 
+/* Dark theme variables */
+[data-bs-theme="dark"] {
+    --text-color: #e9ecef;
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --border-color: #2c2c2c;
+    --link-color: #6ea8fe;
+    --link-hover: #8bb9fe;
+    --muted-text: #adb5bd;
+    --navbar-bg: #161819;
+    --footer-bg: #161819;
+    --input-bg: #2c2c2c;
+    --shadow-color: rgba(0, 0, 0, 0.25);
+    --success-color: #75b798;
+    --warning-color: #ffda6a;
+    --info-color: #6edff6;
+    --box-bg: #2c2c2c; /* New variable for information boxes */
+}
+
 /* Global Styles */
 body {
     color: var(--text-color);
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
     background-color: var(--bg-color);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -49,49 +68,61 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Cards */
 .card {
-    transition: transform 0.3s ease;
-    border-radius: 12px;
     background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+    box-shadow: 0 2px 15px var(--shadow-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+/* Form Controls */
+.form-control,
+.form-select {
+    background-color: var(--input-bg);
     border-color: var(--border-color);
     color: var(--text-color);
 }
 
-.card:hover {
-    transform: translateY(-5px);
-}
-
-/* Form Controls */
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--input-bg);
     border-color: var(--rza-secondary);
+    color: var(--text-color);
     box-shadow: 0 0 0 0.2rem rgba(74, 139, 63, 0.25);
 }
 
 /* Navigation */
 .navbar {
-    background-color: var(--rza-primary);
-    box-shadow: 0 2px 4px var(--rza-shadow);
+    background-color: var(--navbar-bg);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .navbar-brand {
-    color: white !important;
+    color: #ffffff;
     font-weight: 600;
 }
 
 .nav-link {
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: rgba(255, 255, 255, 0.9);
     transition: color 0.2s ease;
 }
 
 .nav-link:hover {
-    color: var(--rza-accent) !important;
+    color: var(--rza-accent);
 }
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/hero-bg.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/hero-bg.jpg');
     background-size: cover;
     background-position: center;
-    color: white;
+    color: #ffffff;
     padding: 100px 0;
     margin-bottom: 40px;
 }
@@ -102,17 +133,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Tables */
-.table th {
+.table {
     color: var(--text-color);
-    font-weight: 600;
+    border-color: var(--border-color);
+}
+
+.table th,
+.table td {
+    border-color: var(--border-color);
 }
 
 /* Accessibility */
 .high-contrast {
-    --rza-primary: #000000;
-    --rza-secondary: #006600;
-    --rza-text: #000000;
-    --rza-bg-light: #ffffff;
+    --text-color: #ffffff !important;
+    --bg-color: #000000 !important;
+    --card-bg: #1a1a1a !important;
+    --border-color: #ffffff !important;
+    --link-color: #ffff00 !important;
+    --link-hover: #ffd700 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -232,178 +270,79 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* Dark Theme Colors */
-[data-theme="dark"] {
-    --text-color: #ffffff;
-    --bg-color: #121212;  /* Darker background */
-    --card-bg: #1e1e1e;   /* Darker card background */
-    --border-color: #2c2c2c;
-    --link-color: #ffffff;
-    --link-hover: #e9ecef;
-    --muted-text: #adb5bd;
+/* Footer */
+footer {
+    background-color: var(--footer-bg) !important;
+    border-top: 1px solid var(--border-color);
 }
 
-/* Force dark background on body and main containers */
-[data-theme="dark"] body,
-[data-theme="dark"] .container,
-[data-theme="dark"] main,
-[data-theme="dark"] .content {
-    background-color: var(--bg-color) !important;
-    color: var(--text-color);
-}
-
-/* Accessibility section specific styles */
-[data-theme="dark"] .accessibility-section {
-    background-color: #000000 !important;
-    color: var(--text-color);
-    padding: 2rem;
-    border-radius: 8px;
-    margin: 1.5rem 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-}
-
-[data-theme="dark"] .accessibility-section h2,
-[data-theme="dark"] .accessibility-section h3,
-[data-theme="dark"] .accessibility-section h4,
-[data-theme="dark"] .accessibility-section p,
-[data-theme="dark"] .accessibility-section li {
-    color: var(--text-color) !important;
-}
-
-[data-theme="dark"] .accessibility-section .list-group-item {
-    background-color: #000000 !important;
-    border-color: #2c2c2c;
-    color: var(--text-color) !important;
-}
-
-/* Physical Facilities and Digital Access sections */
-[data-theme="dark"] .accessibility-section .facilities,
-[data-theme="dark"] .accessibility-section .digital-access {
-    background-color: #000000 !important;
-    border: 1px solid #2c2c2c;
-    padding: 1.5rem;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-}
-
-/* Ensure all text elements are visible */
-[data-theme="dark"] .accessibility-section * {
-    color: var(--text-color) !important;
-}
-
-/* Icons in accessibility section */
-[data-theme="dark"] .accessibility-section i,
-[data-theme="dark"] .accessibility-section .fa,
-[data-theme="dark"] .accessibility-section .fas,
-[data-theme="dark"] .accessibility-section .far {
-    color: var(--text-color) !important;
-    margin-right: 0.5rem;
-}
-
-/* Ensure headings are visible */
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4,
-[data-theme="dark"] h5,
-[data-theme="dark"] h6 {
-    color: var(--text-color) !important;
-}
-
-/* Force dark background on cards */
-[data-theme="dark"] .card {
-    background-color: var(--card-bg) !important;
-    border-color: var(--border-color);
-}
-
-/* Ensure all text in cards is visible */
-[data-theme="dark"] .card * {
-    color: var(--text-color);
-}
-
-/* Force dark background on footer */
-[data-theme="dark"] footer {
-    background-color: #000000 !important;
-    color: var(--text-color);
-}
-
-/* Apply theme colors */
-body {
-    color: var(--text-color);
-    background-color: var(--bg-color) !important;  /* Force background color */
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Container background in dark mode */
-[data-theme="dark"] .container {
-    background-color: var(--bg-color);
-}
-
-/* Main content area background */
-[data-theme="dark"] main,
-[data-theme="dark"] .content {
-    background-color: var(--bg-color);
-}
-
-/* Ensure footer background is dark */
-[data-theme="dark"] footer {
-    background-color: #161819 !important;  /* Even darker footer */
-}
-
-/* Card styles */
-.card {
+/* List Groups */
+.list-group-item {
     background-color: var(--card-bg);
     border-color: var(--border-color);
     color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Nested cards in dark theme */
-[data-theme="dark"] .card {
+/* Accordion */
+.accordion-button,
+.accordion-item {
     background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
 }
 
-[data-theme="dark"] .card .card {
-    background-color: var(--card-bg);  /* Keep nested cards same color */
-}
-
-/* Room details and booking info cards */
-[data-theme="dark"] .room-details,
-[data-theme="dark"] .booking-info,
-[data-theme="dark"] .booking-information,
-[data-theme="dark"] .total-amount {
-    background-color: var(--card-bg);
+.accordion-button:not(.collapsed) {
+    background-color: var(--input-bg);
     color: var(--text-color);
 }
 
-/* Ensure all text elements in cards are visible */
-[data-theme="dark"] .card h1,
-[data-theme="dark"] .card h2,
-[data-theme="dark"] .card h3,
-[data-theme="dark"] .card h4,
-[data-theme="dark"] .card h5,
-[data-theme="dark"] .card h6,
-[data-theme="dark"] .card p,
-[data-theme="dark"] .card span,
-[data-theme="dark"] .card div,
-[data-theme="dark"] .card dl,
-[data-theme="dark"] .card dt,
-[data-theme="dark"] .card dd {
+/* Dropdowns */
+.dropdown-menu {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+.dropdown-item {
     color: var(--text-color);
 }
 
-/* Form controls within cards */
-[data-theme="dark"] .card .form-control {
-    background-color: #1a1d20;  /* Even darker for form inputs */
+.dropdown-item:hover {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+/* Links */
+a {
+    color: var(--link-color);
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--link-hover);
+}
+
+/* Buttons */
+.btn-outline-light {
     border-color: var(--border-color);
     color: var(--text-color);
 }
 
-/* List groups within cards */
-[data-theme="dark"] .card .list-group-item {
-    background-color: var(--card-bg);
+.btn-outline-light:hover {
+    background-color: var(--input-bg);
     border-color: var(--border-color);
     color: var(--text-color);
+}
+
+/* Hero Section - Keep this separate from theme */
+.hero-content h1,
+.hero-content p {
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Remove all !important tags from theme-specific styles */
+[data-bs-theme="dark"] * {
+    border-color: var(--border-color);
 }
 
 /* Apply Color Variables */
@@ -416,45 +355,8 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--muted-text) !important;
 }
 
-a {
-    color: var(--link-color);
-}
-
-a:hover {
-    color: var(--link-hover);
-}
-
 /* Quiz Specific Styles */
-.accordion-button {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-}
-
-.accordion-button:not(.collapsed) {
-    background-color: var(--border-color);
-    color: var(--text-color);
-}
-
 .accordion-body {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-}
-
-/* Table Styles */
-.table {
-    color: var(--text-color);
-}
-
-.table thead th {
-    border-color: var(--border-color);
-}
-
-.table td {
-    border-color: var(--border-color);
-}
-
-/* Form Styles */
-.form-control:focus {
     background-color: var(--card-bg);
     color: var(--text-color);
 }
@@ -488,15 +390,240 @@ a:hover {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Accordion items in dark mode */
-[data-theme="dark"] .accordion-item,
-[data-theme="dark"] .accordion-button,
-[data-theme="dark"] .accordion-body {
+/* Modal */
+.modal-content {
     background-color: var(--card-bg);
-    color: var(--text-color);
+    border-color: var(--border-color);
 }
 
-[data-theme="dark"] .accordion-button:not(.collapsed) {
-    background-color: #1a1d20;  /* Even darker when expanded */
+.modal-header,
+.modal-footer {
+    border-color: var(--border-color);
+}
+
+/* Remove the previous booking information styles */
+.booking-information,
+.total-amount,
+.card.bg-light {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+/* Remove these conflicting styles */
+.room-details,
+.booking-info,
+.booking-information,
+.total-amount {
+    background-color: inherit;
+}
+
+/* Ensure all text elements within cards use correct colors */
+[data-bs-theme="dark"] .card *:not(.btn):not(button),
+[data-bs-theme="dark"] .booking-information *:not(.btn):not(button),
+[data-bs-theme="dark"] .total-amount *:not(.btn):not(button) {
+    color: var(--text-color) !important;
+}
+
+/* Override Bootstrap's bg-light class in dark mode */
+[data-bs-theme="dark"] .bg-light {
+    background-color: var(--card-bg) !important;
+}
+
+/* Add these new styles for hero content */
+.hero-content h1 {
+    font-weight: 600;  /* Make text slightly bolder */
+}
+
+.hero-content p {
+    font-size: 1.2rem;  /* Slightly larger text */
+}
+
+.hero-content .btn {
+    font-weight: 500;  /* Make button text slightly bolder */
+    text-shadow: none;  /* Remove text shadow from buttons */
+}
+
+/* Focus indicators for accessibility */
+:focus {
+    outline: 3px solid var(--rza-accent) !important;
+    outline-offset: 2px;
+}
+
+/* ARIA support */
+[aria-hidden="true"] {
+    display: none !important;
+}
+
+[role="alert"] {
+    border: 2px solid var(--warning-color);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+}
+
+/* Modern Design Elements */
+.card {
+    box-shadow: 0 2px 15px var(--shadow-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+/* Hero Section Enhancement */
+.hero-section {
+    background: linear-gradient(45deg, var(--rza-primary), var(--rza-secondary));
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: url('/rza/assets/images/pattern.svg') repeat;
+    opacity: 0.1;
+}
+
+/* Enhanced Button Styles */
+.btn {
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--rza-primary), var(--rza-secondary));
+    border: none;
+}
+
+/* Room Cards Enhancement */
+.room-card {
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.room-card img {
+    transition: transform 0.3s ease;
+}
+
+.room-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Price Display Enhancement */
+.price-display {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--rza-primary);
+    display: flex;
+    align-items: baseline;
+}
+
+.price-display small {
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    color: var(--muted-text);
+}
+
+/* Form Enhancement */
+.form-control {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--rza-primary);
+    box-shadow: 0 0 0 0.2rem rgba(44, 85, 48, 0.15);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Loading Animation */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--rza-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Reading Mode Styles */
+.reading-mode {
+    --bg-color: #f8f9fa;
+    --text-color: #333;
+    --line-height: 1.8;
+    --font-family: 'Georgia', serif;
+}
+
+.reading-mode body {
+    background-color: var(--bg-color);
     color: var(--text-color);
+    line-height: var(--line-height);
+    font-family: var(--font-family);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.reading-mode p {
+    margin-bottom: 1.5em;
+    font-size: 1.1em;
+}
+
+/* High Contrast Mode Styles */
+.high-contrast {
+    --text-color: #ffffff;
+    --bg-color: #000000;
+    --card-bg: #1a1a1a;
+    --border-color: #ffffff;
+    --link-color: #ffff00;
+    --link-hover: #ffd700;
+    --navbar-bg: #000000;
+    --footer-bg: #000000;
+    --input-bg: #000000;
+    --success-color: #00ff00;
+    --warning-color: #ffff00;
+    --info-color: #00ffff;
+}
+
+.high-contrast * {
+    border-color: var(--border-color) !important;
+}
+
+.high-contrast img {
+    filter: grayscale(100%) contrast(120%);
 } 

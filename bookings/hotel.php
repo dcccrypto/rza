@@ -101,10 +101,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once '../includes/header.php';
 ?>
 
-<div class="container my-5 animate__animated animate__fadeIn">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0">
+<div class="container py-5 animate-fade-in">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Hotel Booking</h3>
+                </div>
                 <div class="card-body p-4">
                     <h2 class="card-title mb-4">Book Your Hotel Stay</h2>
                     
@@ -156,12 +159,10 @@ require_once '../includes/header.php';
                                     </div>
                                 </div>
                             </div>
-                            <div class="card bg-light mb-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Total Amount:</span>
-                                        <span class="h4 mb-0" id="totalAmount">£0.00</span>
-                                    </div>
+                            <div class="total-amount" role="region" aria-label="Booking Total">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span id="totalLabel">Total Amount:</span>
+                                    <span class="h4 mb-0" id="totalAmount" aria-labelledby="totalLabel">£0.00</span>
                                 </div>
                             </div>
                         </div>
@@ -211,6 +212,22 @@ require_once '../includes/header.php';
                         <button type="submit" class="btn btn-success w-100">Complete Booking</button>
                     </form>
                 </div>
+            </div>
+            
+            <!-- Room Preview Cards -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="room-card">
+                        <img src="/rza/assets/images/standard-room.jpg" class="img-fluid" alt="Standard Room">
+                        <div class="p-3">
+                            <h5>Standard Room</h5>
+                            <div class="price-display">
+                                £<?= $ROOM_PRICES['Standard'] ?> <small>per night</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Similar card for VIP Room -->
             </div>
         </div>
     </div>
