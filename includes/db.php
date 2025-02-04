@@ -29,6 +29,7 @@ $tables = [
             id INT AUTO_INCREMENT PRIMARY KEY,
             email VARCHAR(255) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
+            last_login DATETIME DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ",
@@ -38,7 +39,7 @@ $tables = [
             user_id INT NOT NULL,
             type ENUM('ticket', 'hotel') NOT NULL,
             booking_date DATE NOT NULL,
-            room_type VARCHAR(50),
+            room_type ENUM('Standard', 'VIP'),
             quantity INT,
             total_amount DECIMAL(10,2) NOT NULL,
             details JSON,
@@ -93,6 +94,13 @@ foreach ($tables as $table => $sql) {
     if (!$conn->query($sql)) {
         die("Error creating table $table: " . $conn->error);
     }
+}
+
+// Replace the direct ALTER TABLE query with a check
+$result = $conn->query("SHOW COLUMNS FROM users LIKE 'last_login'");
+if ($result->num_rows === 0) {
+    // Column doesn't exist, so add it
+    $conn->query("ALTER TABLE users ADD COLUMN last_login DATETIME DEFAULT NULL");
 }
 
 // Helper function for prepared statements

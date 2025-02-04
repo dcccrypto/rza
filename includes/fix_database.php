@@ -29,7 +29,7 @@ $tables = [
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
-        last_login TIMESTAMP NULL DEFAULT NULL,
+        last_login DATETIME DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )",
     
@@ -68,6 +68,7 @@ $tables = [
         question TEXT NOT NULL,
         options JSON NOT NULL,
         correct_answer VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
     )",
     
@@ -85,9 +86,9 @@ $tables = [
 
 foreach ($tables as $sql) {
     if (!$conn->query($sql)) {
-        die("Error creating table: " . $conn->error . "\nQuery: " . $sql);
+        die("Error creating table: " . $conn->error);
     }
 }
 
-echo "Database tables have been successfully recreated!";
+echo "Database structure updated successfully!";
 ?> 

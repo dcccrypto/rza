@@ -5,11 +5,22 @@ require_login();
 
 $user_id = $_SESSION['user_id'];
 
+// Add this near the top of the file for debugging
+var_dump($_SESSION['user_id']);
+
 // Fetch user details
 $stmt = $conn->prepare("SELECT email, created_at FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+if (!$user) {
+    // User not found in database
+    set_flash_message('User account not found. Please try logging in again.', 'danger');
+    header('Location: logout.php');
+    exit;
+}
 
 // Fetch loyalty points
 $stmt = $conn->prepare("SELECT points FROM loyalty_points WHERE user_id = ?");
