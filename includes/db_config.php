@@ -1,6 +1,8 @@
 <?php
-// Supabase database configuration using connection string
-define('DB_CONNECTION_STRING', 'postgresql://postgres:PHk6S!#qyCQ83L76XUde@db.coaoxbogghtseqifpbob.supabase.co:5432/postgres');
+// Supabase database configuration using environment variables
+$db_url = getenv('DATABASE_URL') ?: 'postgresql://postgres:PHk6S!#qyCQ83L76XUde@db.coaoxbogghtseqifpbob.supabase.co:5432/postgres';
+
+define('DB_CONNECTION_STRING', $db_url);
 
 // Initialize database connection
 function init_db_connection() {
