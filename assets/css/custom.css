@@ -1,0 +1,502 @@
+/* Custom Variables */
+:root {
+    --rza-primary: #2c5530;
+    --rza-secondary: #4a8b3f;
+    --rza-accent: #ffd700;
+    --rza-text: #333333;
+    --rza-bg-light: #f8f9fa;
+    --rza-shadow: rgba(0, 0, 0, 0.1);
+    --text-color: #212529;
+    --bg-color: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --link-color: #198754;
+    --link-hover: #146c43;
+    --muted-text: #6c757d;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+}
+
+/* Global Styles */
+body {
+    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn-success {
+    background-color: var(--rza-secondary);
+    border-color: var(--rza-secondary);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: var(--rza-primary);
+    border-color: var(--rza-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--rza-shadow);
+}
+
+/* Cards */
+.card {
+    transition: transform 0.3s ease;
+    border-radius: 12px;
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Form Controls */
+.form-control:focus {
+    border-color: var(--rza-secondary);
+    box-shadow: 0 0 0 0.2rem rgba(74, 139, 63, 0.25);
+}
+
+/* Navigation */
+.navbar {
+    background-color: var(--rza-primary);
+    box-shadow: 0 2px 4px var(--rza-shadow);
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 600;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--rza-accent) !important;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+    margin-bottom: 40px;
+}
+
+/* Animations */
+.animate__fadeIn {
+    animation-duration: 0.8s;
+}
+
+/* Tables */
+.table th {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+/* Accessibility */
+.high-contrast {
+    --rza-primary: #000000;
+    --rza-secondary: #006600;
+    --rza-text: #000000;
+    --rza-bg-light: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Loading States */
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: inherit;
+}
+
+.loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 3px solid var(--rza-secondary);
+    border-top-color: transparent;
+    border-radius: 50%;
+    z-index: 1;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Quiz Styles */
+.quiz-form .list-group-item {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.quiz-form .list-group-item:hover {
+    border-left-color: var(--rza-green);
+    background-color: var(--border-color);
+}
+
+.quiz-form .form-check-input:checked + .form-check-label {
+    color: var(--rza-green);
+    font-weight: 500;
+}
+
+/* Progress Bar Animation */
+.progress-bar {
+    transition: width 0.6s ease-in-out;
+}
+
+/* Profile Badge */
+.points-badge {
+    background-color: var(--rza-green);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    display: inline-block;
+    transition: all 0.3s ease-in-out;
+}
+
+.points-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
+/* Custom Alert Styles */
+.alert {
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+}
+
+/* Dark Theme Colors */
+[data-theme="dark"] {
+    --text-color: #ffffff;
+    --bg-color: #121212;  /* Darker background */
+    --card-bg: #1e1e1e;   /* Darker card background */
+    --border-color: #2c2c2c;
+    --link-color: #ffffff;
+    --link-hover: #e9ecef;
+    --muted-text: #adb5bd;
+}
+
+/* Force dark background on body and main containers */
+[data-theme="dark"] body,
+[data-theme="dark"] .container,
+[data-theme="dark"] main,
+[data-theme="dark"] .content {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color);
+}
+
+/* Accessibility section specific styles */
+[data-theme="dark"] .accessibility-section {
+    background-color: #000000 !important;
+    color: var(--text-color);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .accessibility-section h2,
+[data-theme="dark"] .accessibility-section h3,
+[data-theme="dark"] .accessibility-section h4,
+[data-theme="dark"] .accessibility-section p,
+[data-theme="dark"] .accessibility-section li {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .accessibility-section .list-group-item {
+    background-color: #000000 !important;
+    border-color: #2c2c2c;
+    color: var(--text-color) !important;
+}
+
+/* Physical Facilities and Digital Access sections */
+[data-theme="dark"] .accessibility-section .facilities,
+[data-theme="dark"] .accessibility-section .digital-access {
+    background-color: #000000 !important;
+    border: 1px solid #2c2c2c;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+/* Ensure all text elements are visible */
+[data-theme="dark"] .accessibility-section * {
+    color: var(--text-color) !important;
+}
+
+/* Icons in accessibility section */
+[data-theme="dark"] .accessibility-section i,
+[data-theme="dark"] .accessibility-section .fa,
+[data-theme="dark"] .accessibility-section .fas,
+[data-theme="dark"] .accessibility-section .far {
+    color: var(--text-color) !important;
+    margin-right: 0.5rem;
+}
+
+/* Ensure headings are visible */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+    color: var(--text-color) !important;
+}
+
+/* Force dark background on cards */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color);
+}
+
+/* Ensure all text in cards is visible */
+[data-theme="dark"] .card * {
+    color: var(--text-color);
+}
+
+/* Force dark background on footer */
+[data-theme="dark"] footer {
+    background-color: #000000 !important;
+    color: var(--text-color);
+}
+
+/* Apply theme colors */
+body {
+    color: var(--text-color);
+    background-color: var(--bg-color) !important;  /* Force background color */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Container background in dark mode */
+[data-theme="dark"] .container {
+    background-color: var(--bg-color);
+}
+
+/* Main content area background */
+[data-theme="dark"] main,
+[data-theme="dark"] .content {
+    background-color: var(--bg-color);
+}
+
+/* Ensure footer background is dark */
+[data-theme="dark"] footer {
+    background-color: #161819 !important;  /* Even darker footer */
+}
+
+/* Card styles */
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Nested cards in dark theme */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg);
+}
+
+[data-theme="dark"] .card .card {
+    background-color: var(--card-bg);  /* Keep nested cards same color */
+}
+
+/* Room details and booking info cards */
+[data-theme="dark"] .room-details,
+[data-theme="dark"] .booking-info,
+[data-theme="dark"] .booking-information,
+[data-theme="dark"] .total-amount {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Ensure all text elements in cards are visible */
+[data-theme="dark"] .card h1,
+[data-theme="dark"] .card h2,
+[data-theme="dark"] .card h3,
+[data-theme="dark"] .card h4,
+[data-theme="dark"] .card h5,
+[data-theme="dark"] .card h6,
+[data-theme="dark"] .card p,
+[data-theme="dark"] .card span,
+[data-theme="dark"] .card div,
+[data-theme="dark"] .card dl,
+[data-theme="dark"] .card dt,
+[data-theme="dark"] .card dd {
+    color: var(--text-color);
+}
+
+/* Form controls within cards */
+[data-theme="dark"] .card .form-control {
+    background-color: #1a1d20;  /* Even darker for form inputs */
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* List groups within cards */
+[data-theme="dark"] .card .list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Apply Color Variables */
+.card-title, .h1, .h2, .h3, .h4, .h5, .h6,
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-color);
+}
+
+.text-muted {
+    color: var(--muted-text) !important;
+}
+
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--link-hover);
+}
+
+/* Quiz Specific Styles */
+.accordion-button {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.accordion-body {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Table Styles */
+.table {
+    color: var(--text-color);
+}
+
+.table thead th {
+    border-color: var(--border-color);
+}
+
+.table td {
+    border-color: var(--border-color);
+}
+
+/* Form Styles */
+.form-control:focus {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Alert Colors */
+.alert-success {
+    background-color: rgba(25, 135, 84, 0.15);
+    border-color: rgba(25, 135, 84, 0.4);
+    color: var(--success-color);
+}
+
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.15);
+    border-color: rgba(255, 193, 7, 0.4);
+    color: var(--warning-color);
+}
+
+.alert-info {
+    background-color: rgba(13, 202, 240, 0.15);
+    border-color: rgba(13, 202, 240, 0.4);
+    color: var(--info-color);
+}
+
+/* Progress Bar */
+.progress {
+    background-color: var(--border-color);
+}
+
+/* Transitions */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Accordion items in dark mode */
+[data-theme="dark"] .accordion-item,
+[data-theme="dark"] .accordion-button,
+[data-theme="dark"] .accordion-body {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: #1a1d20;  /* Even darker when expanded */
+    color: var(--text-color);
+} 
