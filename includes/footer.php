@@ -1,30 +1,30 @@
     </div><!-- End container from header -->
     
-    <footer class="bg-dark text-light py-4 mt-5">
+    <footer class="bg-success text-light py-4 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5>Riget Zoo Adventures</h5>
+                    <h5 class="text-white">Riget Zoo Adventures</h5>
                     <p>Experience wildlife, luxury stays, and educational adventures all in one place.</p>
                 </div>
                 <div class="col-md-4">
-                    <h5>Quick Links</h5>
+                    <h5 class="text-white">Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="/rza/bookings/tickets.php">Book Tickets</a></li>
-                        <li><a href="/rza/bookings/hotel.php">Hotel Booking</a></li>
-                        <li><a href="/rza/education/resources.php">Educational Resources</a></li>
+                        <li><a href="/rza/bookings/tickets.php" class="text-white text-decoration-none hover-opacity">Book Tickets</a></li>
+                        <li><a href="/rza/bookings/hotel.php" class="text-white text-decoration-none hover-opacity">Hotel Booking</a></li>
+                        <li><a href="/rza/education/resources.php" class="text-white text-decoration-none hover-opacity">Educational Resources</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <h5>Accessibility Options</h5>
+                    <h5 class="text-white">Accessibility Options</h5>
                     <div class="d-flex flex-column gap-2">
-                        <button class="btn btn-outline-light" onclick="toggleFontSize()" aria-label="Toggle Font Size">
+                        <button class="btn btn-outline-light hover-opacity" onclick="toggleFontSize()" aria-label="Toggle Font Size">
                             <i class="bi bi-fonts"></i> Text Size
                         </button>
-                        <button class="btn btn-outline-light" onclick="toggleHighContrast()" aria-label="Toggle High Contrast">
+                        <button class="btn btn-outline-light hover-opacity" onclick="toggleHighContrast()" aria-label="Toggle High Contrast">
                             <i class="bi bi-circle-half"></i> High Contrast
                         </button>
-                        <button class="btn btn-outline-light" onclick="toggleReadingMode()" aria-label="Toggle Reading Mode">
+                        <button class="btn btn-outline-light hover-opacity" onclick="toggleReadingMode()" aria-label="Toggle Reading Mode">
                             <i class="bi bi-book"></i> Reading Mode
                         </button>
                     </div>
@@ -32,6 +32,18 @@
             </div>
         </div>
     </footer>
+
+    <style>
+    .hover-opacity {
+        transition: opacity 0.3s ease;
+    }
+    .hover-opacity:hover {
+        opacity: 0.8;
+    }
+    footer a:hover {
+        opacity: 0.8;
+    }
+    </style>
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

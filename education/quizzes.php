@@ -9,16 +9,15 @@ require_login();
 // Initialize quiz if not started
 if (!isset($_SESSION['quiz_in_progress'])) {
     // Get random quiz
-    $stmt = prepare_stmt("SELECT id, title, description FROM quizzes ORDER BY RAND() LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, title, description FROM aweb_quizzes ORDER BY RAND() LIMIT 1");
     $stmt->execute();
-    $quiz = $stmt->get_result()->fetch_assoc();
+    $quiz = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($quiz) {
         // Get quiz questions
-        $stmt = prepare_stmt("SELECT id, question, options FROM quiz_questions WHERE quiz_id = ? ORDER BY RAND() LIMIT 5");
-        $stmt->bind_param("i", $quiz['id']);
-        $stmt->execute();
-        $questions = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt = $conn->prepare("SELECT id, question, options FROM aweb_quiz_questions WHERE quiz_id = ? ORDER BY RAND() LIMIT 5");
+        $stmt->execute([$quiz['id']]);
+        $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         if (count($questions) > 0) {
             // Store quiz data in session
@@ -50,11 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['answer'])) {
     
     if ($current < count($questions)) {
         // Get correct answer for current question
-        $stmt = prepare_stmt("SELECT correct_answer FROM quiz_questions WHERE id = ?");
-        $stmt->bind_param("i", $questions[$current]['id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $correct_answer = $result->fetch_assoc()['correct_answer'];
+        $stmt = $conn->prepare("SELECT correct_answer FROM aweb_quiz_questions WHERE id = ?");
+        $stmt->execute([$questions[$current]['id']]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $correct_answer = $result['correct_answer'];
         
         // Store user's answer and check if correct
         $_SESSION['user_answers'][$current] = [
@@ -78,14 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['answer'])) {
         $score = $_SESSION['quiz_score'];
         $max_score = count($questions);
         
-        $stmt = prepare_stmt("
-            INSERT INTO quiz_attempts (user_id, quiz_id, score, max_score) 
+        $stmt = $conn->prepare("
+            INSERT INTO aweb_quiz_attempts (user_id, quiz_id, score, max_score) 
             VALUES (?, ?, ?, ?)
         ");
         
-        // Bind parameters using variables
-        $stmt->bind_param("iiii", $user_id, $quiz_id, $score, $max_score);
-        $stmt->execute();
+        $stmt->execute([$user_id, $quiz_id, $score, $max_score]);
         
         // Keep results for display but mark quiz as complete
         $_SESSION['quiz_complete'] = true;
@@ -120,19 +116,18 @@ if (isset($_SESSION['quiz_in_progress']) && !isset($_SESSION['quiz_complete'])) 
                 
                 <!-- Previous Attempts -->
                 <?php
-                $stmt = prepare_stmt("
+                $stmt = $conn->prepare("
                     SELECT q.title, qa.score, qa.max_score, qa.attempted_at
-                    FROM quiz_attempts qa
-                    JOIN quizzes q ON qa.quiz_id = q.id
+                    FROM aweb_quiz_attempts qa
+                    JOIN aweb_quizzes q ON qa.quiz_id = q.id
                     WHERE qa.user_id = ?
                     ORDER BY qa.attempted_at DESC
                     LIMIT 5
                 ");
-                $stmt->bind_param("i", $_SESSION['user_id']);
-                $stmt->execute();
-                $attempts = $stmt->get_result();
+                $stmt->execute([$_SESSION['user_id']]);
+                $attempts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
-                if ($attempts->num_rows > 0):
+                if (count($attempts) > 0):
                 ?>
                     <div class="card shadow-sm border-0 mt-4">
                         <div class="card-body">
@@ -147,7 +142,7 @@ if (isset($_SESSION['quiz_in_progress']) && !isset($_SESSION['quiz_complete'])) 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php while ($attempt = $attempts->fetch_assoc()): ?>
+                                        <?php foreach ($attempts as $attempt): ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($attempt['title']) ?></td>
                                                 <td>
@@ -156,7 +151,7 @@ if (isset($_SESSION['quiz_in_progress']) && !isset($_SESSION['quiz_complete'])) 
                                                 </td>
                                                 <td><?= date('M d, Y H:i', strtotime($attempt['attempted_at'])) ?></td>
                                             </tr>
-                                        <?php endwhile; ?>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>

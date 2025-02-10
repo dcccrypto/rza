@@ -6,14 +6,12 @@ require_login();
 $user_id = $_SESSION['user_id'];
 
 // Add this near the top of the file for debugging
-var_dump($_SESSION['user_id']);
+error_log("User ID from session: " . var_export($_SESSION['user_id'], true));
 
 // Fetch user details
-$stmt = $conn->prepare("SELECT email, created_at FROM users WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+$stmt = $conn->prepare("SELECT email, created_at FROM aweb_users WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
     // User not found in database
@@ -23,17 +21,15 @@ if (!$user) {
 }
 
 // Fetch loyalty points
-$stmt = $conn->prepare("SELECT points FROM loyalty_points WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$loyalty = $stmt->get_result()->fetch_assoc();
+$stmt = $conn->prepare("SELECT points FROM aweb_loyalty_points WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$loyalty = $stmt->fetch(PDO::FETCH_ASSOC);
 $points = $loyalty ? $loyalty['points'] : 0;
 
 // Fetch recent bookings
-$stmt = $conn->prepare("SELECT * FROM bookings WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$bookings = $stmt->get_result();
+$stmt = $conn->prepare("SELECT * FROM aweb_bookings WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+$stmt->execute([$user_id]);
+$bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 require_once '../includes/header.php';
 ?>
@@ -61,7 +57,7 @@ require_once '../includes/header.php';
             <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <h3 class="card-title mb-4">Recent Bookings</h3>
-                    <?php if ($bookings->num_rows > 0): ?>
+                    <?php if (!empty($bookings)): ?>
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
@@ -75,7 +71,7 @@ require_once '../includes/header.php';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php while ($booking = $bookings->fetch_assoc()): ?>
+                                    <?php foreach ($bookings as $booking): ?>
                                         <tr>
                                             <td>#<?= str_pad($booking['id'], 6, '0', STR_PAD_LEFT) ?></td>
                                             <td><?= date('d/m/Y', strtotime($booking['booking_date'])) ?></td>
@@ -99,7 +95,7 @@ require_once '../includes/header.php';
                                                 </a>
                                             </td>
                                         </tr>
-                                    <?php endwhile; ?>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>

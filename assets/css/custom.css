@@ -4,6 +4,8 @@
     --rza-primary: #2c5530;
     --rza-secondary: #4a8b3f;
     --rza-accent: #ffd700;
+    --rza-success: #198754;
+    --rza-success-hover: #146c43;
     --text-color: #212529;
     --bg-color: #ffffff;
     --card-bg: #ffffff;
@@ -15,9 +17,21 @@
     --footer-bg: #161819;
     --input-bg: #ffffff;
     --shadow-color: rgba(0, 0, 0, 0.1);
-    --success-color: #198754;
     --warning-color: #ffc107;
     --info-color: #0dcaf0;
+    --card-hover-transform: translateY(-2px);
+    --transition-speed: 0.3s;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --font-primary: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-heading: var(--font-primary);
+    --line-height-base: 1.5;
+    --line-height-heading: 1.2;
+    --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-duration: 0.3s;
 }
 
 /* Dark theme variables */
@@ -33,7 +47,8 @@
     --footer-bg: #161819;
     --input-bg: #2c2c2c;
     --shadow-color: rgba(0, 0, 0, 0.25);
-    --success-color: #75b798;
+    --rza-success: #75b798;
+    --rza-success-hover: #86c5a6;
     --warning-color: #ffda6a;
     --info-color: #6edff6;
     --box-bg: #2c2c2c; /* New variable for information boxes */
@@ -54,16 +69,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Buttons */
 .btn-success {
-    background-color: var(--rza-secondary);
-    border-color: var(--rza-secondary);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: var(--rza-success);
+    border-color: var(--rza-success);
+    transition: all var(--transition-speed) ease;
 }
 
 .btn-success:hover {
-    background-color: var(--rza-primary);
-    border-color: var(--rza-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--rza-shadow);
+    background-color: var(--rza-success-hover);
+    border-color: var(--rza-success-hover);
+    transform: var(--card-hover-transform);
 }
 
 /* Cards */
@@ -72,29 +86,77 @@ h1, h2, h3, h4, h5, h6 {
     border-color: var(--border-color);
     color: var(--text-color);
     box-shadow: 0 2px 15px var(--shadow-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease;
     border: none;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
 
 .card:hover {
-    transform: translateY(-2px);
+    transform: var(--card-hover-transform);
     box-shadow: 0 4px 20px var(--shadow-color);
 }
 
 /* Form Controls */
 .form-control,
 .form-select {
-    background-color: var(--input-bg);
-    border-color: var(--border-color);
-    color: var(--text-color);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid var(--border-color);
+    transition: all var(--transition-speed) ease;
 }
 
 .form-control:focus,
 .form-select:focus {
-    background-color: var(--input-bg);
     border-color: var(--rza-secondary);
+    box-shadow: 0 0 0 0.25rem rgba(74, 139, 63, 0.25);
+}
+
+/* Improved validation states */
+.was-validated .form-control:valid,
+.form-control.is-valid {
+    border-color: var(--rza-success);
+    background-image: url("data:image/svg+xml,..."); /* Add valid icon */
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+    border-color: var(--bs-danger);
+    background-image: url("data:image/svg+xml,..."); /* Add invalid icon */
+}
+
+/* Form Validation Styles */
+.form-control.is-invalid {
+    background-image: none;
+    border-color: var(--bs-danger);
+    padding-right: 1rem;
+}
+
+.form-control.is-valid {
+    background-image: none;
+    border-color: var(--rza-success);
+    padding-right: 1rem;
+}
+
+.invalid-feedback {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    color: var(--bs-danger);
+}
+
+.invalid-feedback::before {
+    content: '⚠️';
+    margin-right: 0.5rem;
+}
+
+/* Input Icons */
+.input-group-text {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
     color: var(--text-color);
-    box-shadow: 0 0 0 0.2rem rgba(74, 139, 63, 0.25);
 }
 
 /* Navigation */
@@ -115,6 +177,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .nav-link:hover {
     color: var(--rza-accent);
+    transform: translateY(-1px);
 }
 
 /* Hero Section */
@@ -130,6 +193,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Animations */
 .animate__fadeIn {
     animation-duration: 0.8s;
+    animation-timing-function: var(--transition-timing);
 }
 
 /* Tables */
@@ -161,42 +225,46 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Loading States */
-.loading {
+.btn-loading {
     position: relative;
     pointer-events: none;
 }
 
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: inherit;
+.btn-loading .btn-text {
+    visibility: hidden;
 }
 
-.loading::before {
+.btn-loading::after {
     content: '';
     position: absolute;
+    width: 1.25rem;
+    height: 1.25rem;
     top: 50%;
     left: 50%;
-    width: 30px;
-    height: 30px;
-    margin: -15px 0 0 -15px;
-    border: 3px solid var(--rza-secondary);
-    border-top-color: transparent;
+    margin: -0.625rem 0 0 -0.625rem;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-top-color: white;
     border-radius: 50%;
-    z-index: 1;
     animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+/* Form Loading Overlay */
+.form-loading {
+    position: relative;
+}
+
+.form-loading::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--card-bg);
+    opacity: 0.7;
+    border-radius: inherit;
+    z-index: 1;
 }
 
 /* Quiz Styles */
@@ -241,15 +309,35 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom Alert Styles */
 .alert {
-    border-radius: 0.5rem;
     border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    animation: slideIn 0.5s ease-out;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideInDown 0.3s ease-out;
 }
 
-@keyframes slideIn {
+.alert-success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--rza-success);
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--bs-danger);
+}
+
+.alert-icon {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+@keyframes slideInDown {
     from {
-        transform: translateY(-100%);
+        transform: translateY(-1rem);
         opacity: 0;
     }
     to {
@@ -261,12 +349,17 @@ h1, h2, h3, h4, h5, h6 {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .container {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
     }
     
     .navbar-brand {
         font-size: 1.2rem;
+    }
+    
+    .card {
+        padding: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
     }
 }
 
@@ -365,7 +458,7 @@ h1, h2, h3, h4, h5, h6 {
 .alert-success {
     background-color: rgba(25, 135, 84, 0.15);
     border-color: rgba(25, 135, 84, 0.4);
-    color: var(--success-color);
+    color: var(--rza-success);
 }
 
 .alert-warning {
@@ -468,12 +561,13 @@ h1, h2, h3, h4, h5, h6 {
 /* Modern Design Elements */
 .card {
     box-shadow: 0 2px 15px var(--shadow-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease;
     border: none;
 }
 
 .card:hover {
-    transform: translateY(-2px);
+    transform: var(--card-hover-transform);
     box-shadow: 0 4px 20px var(--shadow-color);
 }
 
@@ -505,7 +599,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: all 0.3s ease;
+    transition: all var(--animation-duration) var(--transition-timing);
 }
 
 .btn-primary {
@@ -548,7 +642,7 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 8px;
     padding: 0.75rem 1rem;
     border: 2px solid var(--border-color);
-    transition: all 0.3s ease;
+    transition: all var(--animation-duration) var(--transition-timing);
 }
 
 .form-control:focus {
@@ -626,4 +720,157 @@ h1, h2, h3, h4, h5, h6 {
 
 .high-contrast img {
     filter: grayscale(100%) contrast(120%);
+}
+
+/* Container consistency */
+.container {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+}
+
+/* Card standardization */
+.card {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+    
+    .card {
+        padding: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+/* Heading hierarchy */
+h1, .h1 { 
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+h2, .h2 { 
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+}
+
+h3, .h3 { 
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+    h1, .h1 { font-size: 2rem; }
+    h2, .h2 { font-size: 1.75rem; }
+    h3, .h3 { font-size: 1.5rem; }
+}
+
+/* Login Form Specific Styles */
+.login-card {
+    max-width: 450px;
+    margin: 3rem auto;
+    border-radius: 1rem;
+    background: var(--card-bg);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.login-card .card-body {
+    padding: var(--spacing-xl);
+}
+
+.login-card .card-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    color: var(--text-color);
+}
+
+/* Enhanced Form Controls for Login */
+.login-form .form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.login-form .form-control {
+    font-size: 1rem;
+    padding: 0.875rem 1.125rem;
+    border-radius: 0.75rem;
+    background-color: var(--input-bg);
+    border: 2px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.login-form .form-control:focus {
+    border-color: var(--rza-secondary);
+    box-shadow: 0 0 0 4px rgba(74, 139, 63, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Login Button Enhancement */
+.login-form .btn-success {
+    width: 100%;
+    padding: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: var(--spacing-md);
+}
+
+/* Register Link Styling */
+.login-form .register-link {
+    display: block;
+    text-align: center;
+    margin-top: var(--spacing-md);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.login-form .register-link:hover {
+    color: var(--rza-accent);
+}
+
+/* Footer Accessibility Buttons */
+footer .btn-outline-light {
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    transition: all var(--transition-speed) ease;
+    padding: 0.75rem 1rem;
+}
+
+footer .btn-outline-light:hover {
+    background-color: var(--rza-accent);
+    border-color: var(--rza-accent);
+    color: var(--bg-color);
+    transform: translateY(-2px);
+}
+
+footer .btn-outline-light i {
+    font-size: 1.2em;
+    color: inherit;
+}
+
+/* Dark theme specific styles for footer buttons */
+[data-bs-theme="dark"] footer .btn-outline-light {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] footer .btn-outline-light:hover {
+    background-color: var(--rza-accent);
+    border-color: var(--rza-accent);
+    color: #000000;
 } 

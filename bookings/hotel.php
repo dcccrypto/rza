@@ -44,13 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Please enter the card holder name.';
         } else {
             try {
-                $conn->begin_transaction();
+                $conn->beginTransaction();
                 
                 // Insert booking
-                $stmt = $conn->prepare("INSERT INTO bookings (user_id, type, booking_date, room_type, total_amount, details) VALUES (?, 'hotel', ?, ?, ?, ?)");
-                if ($stmt === false) {
-                    throw new Exception("Prepare failed: " . $conn->error);
-                }
+                $stmt = $conn->prepare("INSERT INTO aweb_bookings (user_id, type, booking_date, room_type, total_amount, details) VALUES (?, 'hotel', ?, ?, ?, ?)");
                 
                 $details = json_encode([
                     'nights' => $nights,
@@ -61,30 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]
                 ]);
                 
-                if (!$stmt->bind_param("isids", $_SESSION['user_id'], $booking_date, $room_type, $total_amount, $details)) {
-                    throw new Exception("Binding parameters failed: " . $stmt->error);
-                }
-                
-                if (!$stmt->execute()) {
-                    throw new Exception("Execute failed: " . $stmt->error);
-                }
+                $stmt->execute([$_SESSION['user_id'], $booking_date, $room_type, $total_amount, $details]);
                 
                 // Update loyalty points
                 $points = 10; // Points per booking
-                $stmt = $conn->prepare("INSERT INTO loyalty_points (user_id, points) 
+                $stmt = $conn->prepare("INSERT INTO aweb_loyalty_points (user_id, points) 
                                       VALUES (?, ?) 
                                       ON DUPLICATE KEY UPDATE points = points + ?");
-                if ($stmt === false) {
-                    throw new Exception("Prepare failed: " . $conn->error);
-                }
                 
-                if (!$stmt->bind_param("iii", $_SESSION['user_id'], $points, $points)) {
-                    throw new Exception("Binding parameters failed: " . $stmt->error);
-                }
-                
-                if (!$stmt->execute()) {
-                    throw new Exception("Execute failed: " . $stmt->error);
-                }
+                $stmt->execute([$_SESSION['user_id'], $points, $points]);
                 
                 $conn->commit();
                 set_flash_message("Booking successful! You've earned {$points} loyalty points!", 'success');
@@ -104,8 +86,67 @@ require_once '../includes/header.php';
 <div class="container py-5 animate-fade-in">
     <div class="row">
         <div class="col-lg-8 mx-auto">
+            <!-- Room Preview Cards -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-4">
+                    <a href="/rza/bookings/standard-room.php" class="text-decoration-none">
+                        <div class="card room-card shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="/rza/assets/images/standard-room.jpg" class="card-img-top" alt="Standard Room" style="height: 200px; object-fit: cover;">
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge bg-success">Most Popular</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-success">Standard Room</h5>
+                                <div class="price-display mb-2">
+                                    <span class="h4 text-success">£<?= $ROOM_PRICES['Standard'] ?></span>
+                                    <small class="text-muted">per night</small>
+                                </div>
+                                <p class="card-text">Experience comfort in our well-appointed standard rooms, perfect for both business and leisure travelers.</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-wifi me-2"></i> Free High-Speed WiFi</li>
+                                    <li><i class="fas fa-tv me-2"></i> 42" Smart TV</li>
+                                    <li><i class="fas fa-bed me-2"></i> Queen-Size Bed</li>
+                                    <li><i class="fas fa-bath me-2"></i> En-suite Bathroom</li>
+                                </ul>
+                                <button class="btn btn-outline-success w-100 mt-3">View Details</button>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <a href="/rza/bookings/vip-room.php" class="text-decoration-none">
+                        <div class="card room-card shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="/rza/assets/images/vip-room.webp" class="card-img-top" alt="VIP Suite" style="height: 200px; object-fit: cover;">
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge bg-success">Premium</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-success">VIP Suite</h5>
+                                <div class="price-display mb-2">
+                                    <span class="h4 text-success">£<?= $ROOM_PRICES['VIP'] ?></span>
+                                    <small class="text-muted">per night</small>
+                                </div>
+                                <p class="card-text">Indulge in luxury with our spacious VIP suites, offering premium amenities and exceptional comfort.</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-wifi me-2"></i> Premium High-Speed WiFi</li>
+                                    <li><i class="fas fa-tv me-2"></i> 55" 4K Smart TV</li>
+                                    <li><i class="fas fa-bed me-2"></i> King-Size Bed</li>
+                                    <li><i class="fas fa-bath me-2"></i> Luxury Bathroom with Jacuzzi</li>
+                                </ul>
+                                <button class="btn btn-outline-success w-100 mt-3">View Details</button>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Booking Form Card -->
             <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-success text-white">
                     <h3 class="mb-0">Hotel Booking</h3>
                 </div>
                 <div class="card-body p-4">
@@ -213,25 +254,34 @@ require_once '../includes/header.php';
                     </form>
                 </div>
             </div>
-            
-            <!-- Room Preview Cards -->
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <div class="room-card">
-                        <img src="/rza/assets/images/standard-room.jpg" class="img-fluid" alt="Standard Room">
-                        <div class="p-3">
-                            <h5>Standard Room</h5>
-                            <div class="price-display">
-                                £<?= $ROOM_PRICES['Standard'] ?> <small>per night</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Similar card for VIP Room -->
-            </div>
         </div>
     </div>
 </div>
+
+<style>
+.room-card {
+    transition: transform 0.3s ease-in-out;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+}
+
+.price-display {
+    color: var(--bs-success);
+    font-weight: bold;
+}
+
+.card-img-top {
+    transition: transform 0.3s ease-in-out;
+}
+
+.room-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+</style>
 
 <script>
 // Card number formatting

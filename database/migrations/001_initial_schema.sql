@@ -2,7 +2,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Users table
-CREATE TABLE users (
+CREATE TABLE aweb_users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -11,9 +11,9 @@ CREATE TABLE users (
 );
 
 -- Bookings table
-CREATE TABLE bookings (
+CREATE TABLE aweb_bookings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES users(id),
+    user_id UUID REFERENCES aweb_users(id),
     booking_type VARCHAR(50) NOT NULL, -- 'ticket' or 'hotel'
     booking_date DATE NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
@@ -22,9 +22,9 @@ CREATE TABLE bookings (
 );
 
 -- Hotel bookings details
-CREATE TABLE hotel_bookings (
+CREATE TABLE aweb_hotel_bookings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    booking_id UUID REFERENCES bookings(id),
+    booking_id UUID REFERENCES aweb_bookings(id),
     room_type VARCHAR(50) NOT NULL,
     nights INTEGER NOT NULL,
     check_in_date DATE NOT NULL,
@@ -32,16 +32,16 @@ CREATE TABLE hotel_bookings (
 );
 
 -- Ticket bookings details
-CREATE TABLE ticket_bookings (
+CREATE TABLE aweb_ticket_bookings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    booking_id UUID REFERENCES bookings(id),
+    booking_id UUID REFERENCES aweb_bookings(id),
     ticket_type VARCHAR(50) NOT NULL,
     quantity INTEGER NOT NULL,
     visit_date DATE NOT NULL
 );
 
 -- Educational resources
-CREATE TABLE educational_resources (
+CREATE TABLE aweb_educational_resources (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title VARCHAR(255) NOT NULL,
     category VARCHAR(100) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE educational_resources (
 );
 
 -- Analytics table
-CREATE TABLE analytics (
+CREATE TABLE aweb_analytics (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     type VARCHAR(100) NOT NULL,
     data JSONB NOT NULL,
@@ -69,6 +69,6 @@ $$ language 'plpgsql';
 
 -- Add triggers for updated_at
 CREATE TRIGGER update_users_updated_at
-    BEFORE UPDATE ON users
+    BEFORE UPDATE ON aweb_users
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column(); 

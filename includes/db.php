@@ -1,8 +1,8 @@
 <?php
-require_once 'db_config.php';
+require_once dirname(__FILE__) . '/db_config.php';
 
 try {
-    // Get database connection using Supabase credentials
+    // Get database connection using configuration
     $conn = init_db_connection();
     
     // Set error mode to throw exceptions
@@ -11,16 +11,31 @@ try {
     // Helper function for prepared statements
     function prepare_stmt($sql) {
         global $conn;
-        $stmt = $conn->prepare($sql);
-        if ($stmt === false) {
-            throw new Exception("Prepare failed: " . $conn->errorInfo()[2]);
+        try {
+            $stmt = $conn->prepare($sql);
+            if ($stmt === false) {
+                throw new Exception("Failed to prepare statement: " . implode(" ", $conn->errorInfo()));
+            }
+            return $stmt;
+        } catch (PDOException $e) {
+            error_log("Database prepare error: " . $e->getMessage());
+            throw new Exception("Database error occurred");
         }
-        return $stmt;
+    }
+    
+    // Helper function for executing prepared statements with parameters
+    function execute_stmt($stmt, $params = []) {
+        try {
+            return $stmt->execute($params);
+        } catch (PDOException $e) {
+            error_log("Database execute error: " . $e->getMessage());
+            throw new Exception("Database error occurred");
+        }
     }
     
 } catch (Exception $e) {
     error_log("Database connection error: " . $e->getMessage());
-    die("Database connection failed. Please try again later.");
+    die("We're experiencing technical difficulties. Please try again later.");
 }
 
 // Session timeout setting (30 minutes)

@@ -44,13 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Please enter the card holder name.';
         } else {
             try {
-                $conn->begin_transaction();
+                $conn->beginTransaction();
                 
                 // Insert booking
-                $stmt = $conn->prepare("INSERT INTO bookings (user_id, type, booking_date, quantity, total_amount, details) VALUES (?, 'ticket', ?, ?, ?, ?)");
-                if ($stmt === false) {
-                    throw new Exception("Prepare failed: " . $conn->error);
-                }
+                $stmt = $conn->prepare("INSERT INTO aweb_bookings (user_id, type, booking_date, quantity, total_amount, details) VALUES (?, 'ticket', ?, ?, ?, ?)");
                 
                 $details = json_encode([
                     'adult' => $adult_quantity, 
@@ -62,30 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]
                 ]);
                 
-                if (!$stmt->bind_param("isids", $_SESSION['user_id'], $booking_date, $total_quantity, $total_amount, $details)) {
-                    throw new Exception("Binding parameters failed: " . $stmt->error);
-                }
-                
-                if (!$stmt->execute()) {
-                    throw new Exception("Execute failed: " . $stmt->error);
-                }
+                $stmt->execute([$_SESSION['user_id'], $booking_date, $total_quantity, $total_amount, $details]);
                 
                 // Update loyalty points
                 $points = 10; // Points per booking
-                $stmt = $conn->prepare("INSERT INTO loyalty_points (user_id, points) 
+                $stmt = $conn->prepare("INSERT INTO aweb_loyalty_points (user_id, points) 
                                       VALUES (?, ?) 
                                       ON DUPLICATE KEY UPDATE points = points + ?");
-                if ($stmt === false) {
-                    throw new Exception("Prepare failed: " . $conn->error);
-                }
                 
-                if (!$stmt->bind_param("iii", $_SESSION['user_id'], $points, $points)) {
-                    throw new Exception("Binding parameters failed: " . $stmt->error);
-                }
-                
-                if (!$stmt->execute()) {
-                    throw new Exception("Execute failed: " . $stmt->error);
-                }
+                $stmt->execute([$_SESSION['user_id'], $points, $points]);
                 
                 $conn->commit();
                 set_flash_message("Booking successful! You've earned {$points} loyalty points!", 'success');

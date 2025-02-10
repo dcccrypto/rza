@@ -8,10 +8,9 @@ $booking_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $user_id = $_SESSION['user_id'];
 
 // Fetch booking details
-$stmt = $conn->prepare("SELECT * FROM bookings WHERE id = ? AND user_id = ?");
-$stmt->bind_param("ii", $booking_id, $user_id);
-$stmt->execute();
-$booking = $stmt->get_result()->fetch_assoc();
+$stmt = $conn->prepare("SELECT * FROM aweb_bookings WHERE id = ? AND user_id = ?");
+$stmt->execute([$booking_id, $user_id]);
+$booking = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$booking) {
     set_flash_message("Booking not found.", 'danger');

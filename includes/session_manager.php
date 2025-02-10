@@ -2,11 +2,15 @@
 // Start output buffering to prevent header issues
 ob_start();
 
+// Set error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Session configuration must happen before session_start()
 $session_params = [
     'lifetime' => 1800,
     'path' => '/rza',
-    'domain' => $_SERVER['HTTP_HOST'],
+    'domain' => '',  // Leave empty for automatic domain detection
     'secure' => isset($_SERVER['HTTPS']),
     'httponly' => true,
     'samesite' => 'Lax'
@@ -31,13 +35,13 @@ function verify_csrf_token($token) {
 
 // Authentication checks
 function is_logged_in() {
-    return isset($_SESSION['user_id']);
+    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
 function require_login() {
     if (!is_logged_in()) {
-        set_flash_message('Please login to access this page.', 'warning');
         $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
+        set_flash_message('Please login to access this page.', 'warning');
         header('Location: /rza/account/login.php');
         exit;
     }
@@ -46,6 +50,7 @@ function require_login() {
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 1800)) {
         session_unset();
         session_destroy();
+        session_start();
         set_flash_message('Your session has expired. Please login again.', 'warning');
         header('Location: /rza/account/login.php');
         exit;
@@ -56,10 +61,12 @@ function require_login() {
 // Update user's last login time
 function update_last_login($user_id) {
     global $conn;
-    $stmt = prepare_stmt("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $stmt->close();
+    try {
+        $stmt = $conn->prepare("UPDATE aweb_users SET last_login = CURRENT_TIMESTAMP WHERE id = ?");
+        $stmt->execute([$user_id]);
+    } catch (Exception $e) {
+        error_log("Error updating last login: " . $e->getMessage());
+    }
 }
 
 // Set flash message
@@ -107,5 +114,10 @@ function init_secure_session() {
         session_regenerate_id(true);
         $_SESSION['created'] = time();
     }
+}
+
+// Debug function - remove in production
+function debug_session() {
+    error_log("Session Debug: " . print_r($_SESSION, true));
 }
 ?> 

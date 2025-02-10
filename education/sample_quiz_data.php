@@ -231,33 +231,31 @@ $quiz_data = [
 
 try {
     // Start transaction
-    $conn->begin_transaction();
+    $conn->beginTransaction();
 
     // Clear existing quiz data
-    $conn->query("DELETE FROM quiz_attempts");
-    $conn->query("DELETE FROM quiz_questions");
-    $conn->query("DELETE FROM quizzes");
+    $conn->query("DELETE FROM aweb_quiz_attempts");
+    $conn->query("DELETE FROM aweb_quiz_questions");
+    $conn->query("DELETE FROM aweb_quizzes");
 
     // Insert quiz data
     foreach ($quiz_data as $quiz) {
-        $stmt = prepare_stmt("INSERT INTO quizzes (title, description) VALUES (?, ?)");
-        $stmt->bind_param("ss", $quiz['title'], $quiz['description']);
-        $stmt->execute();
-        $quiz_id = $stmt->insert_id;
+        $stmt = $conn->prepare("INSERT INTO aweb_quizzes (title, description) VALUES (?, ?)");
+        $stmt->execute([$quiz['title'], $quiz['description']]);
+        $quiz_id = $conn->lastInsertId();
         
         // Insert questions
         foreach ($quiz['questions'] as $question) {
-            $stmt = prepare_stmt("
-                INSERT INTO quiz_questions (quiz_id, question, options, correct_answer) 
+            $stmt = $conn->prepare("
+                INSERT INTO aweb_quiz_questions (quiz_id, question, options, correct_answer) 
                 VALUES (?, ?, ?, ?)
             ");
-            $stmt->bind_param("isss", 
+            $stmt->execute([
                 $quiz_id,
                 $question['question'],
                 $question['options'],
                 $question['correct_answer']
-            );
-            $stmt->execute();
+            ]);
         }
     }
 
